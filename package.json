@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Jao-Couto/CompiladorPascal#readme",
   "dependencies": {
+    "fs": "^0.0.1-security",
     "jison-lex": "^0.3.4"
   }
 }

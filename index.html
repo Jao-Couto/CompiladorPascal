@@ -8,14 +8,20 @@
     <title>Léxico</title>
     <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
     <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
-    <script type='text/javascript' src='index.js' defer></script>
+    <script type='module' src='index.js'></script>
+    <script type='text/javascript' src='event.js' defer></script>
+    <script type="module">
+        import { analyze } from "./index.js";
+        window.analyze = analyze;
+    </script>
+
 </head>
 
 <body>
     <div class="container">
         <div class="divButton">
             <input type="file" id="fileUpload" />
-            <button onclick="analyze()" disabled id="analyze">Analisar</button>
+            <button onclick="analyze()" id="analyze">Analisar</button>
         </div>
         <div class="divCode">
             <div style="width: 48%; display: flex; flex-direction: column;">

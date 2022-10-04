@@ -1,4 +1,5 @@
-const JisonLex = require("jison-lex")
+import JisonLex from "jison-lex"
+
 
 const state = {
     openComment: false
@@ -27,4 +28,4 @@ const bnf = {
 
 const lexer = new JisonLex(bnf)
 
-exports.lexer = lexer
+export { lexer } 
