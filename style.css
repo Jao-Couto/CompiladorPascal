@@ -1,9 +1,38 @@
+html{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    width: 100%;
+    height: 90%;
+    margin: 0;
+}
+
+
 .container{
-    width: 100vw;
-    height: 90vh;
+    width: 100%;
+    height: 100%;
+}
+
+.divButton{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.divCode{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    justify-content: space-around;
 }
 
 .code{
-    width: 90%;
+    width: 100%;
     height: 100%;
+}
+
+#fileUpload{
+    margin-right: 20px;
 }

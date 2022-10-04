@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Léxico</title>
-        <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
-        <script type='text/javascript' src='index.js' defer></script>
-    </head>
-    <body>
-        <div class="container">
-            <input type="file" id="fileUpload" />
-            <textarea class="code"></textarea>
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Léxico</title>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+    <script type='text/javascript' src='index.js' defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="divButton">
+            <input type="file" id="fileUpload" />
+            <button onclick="analyze()" disabled id="analyze">Analisar</button>
         </div>
-    </body>
+        <div class="divCode">
+            <div style="width: 48%; display: flex; flex-direction: column;">
+                <label for="codeArea">Código</label>
+                <textarea class="code" id="codeArea"></textarea>
+            </div>
+            <div style="width: 48%; display: flex; flex-direction: column;">
+                <label for="lexerArea">Separação Léxica</label>
+                <textarea class="code" id="lexerArea"></textarea>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+
 </html>
