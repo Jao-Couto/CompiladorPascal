@@ -1,0 +1,22 @@
+{
+  "name": "compiladorpascal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jao-Couto/CompiladorPascal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jao-Couto/CompiladorPascal/issues"
+  },
+  "homepage": "https://github.com/Jao-Couto/CompiladorPascal#readme",
+  "dependencies": {
+    "jison-lex": "^0.3.4"
+  }
+}
