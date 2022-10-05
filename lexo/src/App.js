@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState } from 'react';
-import { lexer } from "./lexer"
+import lexer from "./compiler/lexer"
 
 function App() {
     const [file, setFile] = useState('')
@@ -35,8 +35,8 @@ function App() {
         <div className="App">
 
             <div className="divButton">
-                <input type="file" id="fileUpload" onChange={inputFile} accept=".pas"></input>
-                <button id="analyze" onClick={analyze} disabled={file == ''}>Analizar</button>
+                <input type="file" id="fileUpload" onChange={inputFile} accept=".lalg"></input>
+                <button id="analyze" onClick={analyze} disabled={file === ''}>Analizar</button>
             </div>
             <div className="divCode">
                 <div className="divLabel">
