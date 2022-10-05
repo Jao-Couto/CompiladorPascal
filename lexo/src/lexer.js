@@ -1,4 +1,4 @@
-import JisonLex from "jison-lex"
+const JisonLex = require("jison-lex")
 
 
 const state = {
