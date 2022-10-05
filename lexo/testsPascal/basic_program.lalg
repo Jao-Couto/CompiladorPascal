@@ -1,0 +1,15 @@
+program basic_program
+
+// comentário aleatório
+
+{ mais um comentário
+   mas dessa vez de múltiplas linhas
+}@
+
+var aadsadsadasdasdasddad, b, c;
+
+b := 2;
+
+if (b <= 2) begin 
+   write(b); 
+end;
