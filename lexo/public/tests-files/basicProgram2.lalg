@@ -1,5 +1,9 @@
 program  Maxmin;
 
+{
+    comentário
+}
+
 var
 
     x, y : integer;
