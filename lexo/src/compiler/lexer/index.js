@@ -11,7 +11,7 @@ const lexemes = {
     // Identificadores e números
     ["{INVALID_IDENTIFIER}",      "return ['INVALID_ID_LENGTH', yytext, [yylloc.first_line, yylloc.first_column]];"],
     ["{VALID_IDENTIFIER}",        "return ['ID', yytext, [yylloc.first_line, yylloc.first_column]];"],
-    ["{DIGIT}{9,}",              "return ['OVERFLOW_NUMBER', yytext, [yylloc.first_line, yylloc.first_column]];"],
+    ["{DIGIT}{9,}",               "return ['OVERFLOW_NUMBER', yytext, [yylloc.first_line, yylloc.first_column]];"],
     ["{DIGIT}{1,8}",              "return ['NUMBER', yytext, [yylloc.first_line, yylloc.first_column]];"],
 
     // Delimitadores
@@ -23,7 +23,7 @@ const lexemes = {
 
     // Comentários
     ["\/\/.*{LINE_FEED}+",        "return;"],
-    ["\\\{(\\*(?!\/)|[^*])*\\\}", "return;"],
+    ["\\\{([^*]*?)\\\}",          "return;"],
     ["\\\{(\\*(?!\/)|[^*])*",     "return ['UNEXPECTED_EOF', null, [yylloc.first_line, yylloc.first_column]];"],
 
     // Parênteses
