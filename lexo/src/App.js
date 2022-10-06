@@ -35,7 +35,7 @@ function App() {
         <div className="App">
 
             <div className="divButton">
-                <input type="file" id="fileUpload" onChange={inputFile} accept=".lalg"></input>
+                <input type="file" id="fileUpload" onChange={inputFile} accept=".lalg, .pas, .txt"></input>
                 <button id="analyze" onClick={analyze} disabled={file === ''}>Analizar</button>
             </div>
             <div className="divCode">
