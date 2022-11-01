@@ -4,9 +4,9 @@ program basic_program
 
 { mais um comentário
    mas dessa vez de múltiplas linhas
-}@
+}
 
-var aadsadsadasdasdasddad, b, c;
+var f, b, c;
 
 b := 2;
 

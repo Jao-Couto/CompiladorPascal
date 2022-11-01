@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState } from 'react';
-import lexer from "./compiler/lexer"
+import parser from "./compiler/lexer"
 
 function App() {
     const [file, setFile] = useState('')
@@ -19,16 +19,21 @@ function App() {
     }
 
     const analyze = () => {
-        lexer.setInput(file)
-        let match = lexer.lex();
-        let result = ''
 
-        while (match != 1) {
-            result += match + "\n"
-            match = lexer.lex();
-        }
 
-        setLexerResult(result)
+
+
+        console.log(parser.parse(file));
+        //     lexer.setInput(file)
+        //     let match = lexer.lex();
+        //     let result = ''
+
+        //     while (match != 1) {
+        //         result += match + "\n"
+        //         match = lexer.lex();
+        //     }
+
+        //     setLexerResult(result)
     }
 
     return (
