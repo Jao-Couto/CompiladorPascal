@@ -8,21 +8,25 @@ const lexemes = {
             "INVALID_IDENTIFIER": "[A-Za-z_][A-Za-z_0-9]{15,}",
             "VALID_IDENTIFIER": "[A-Za-z_][A-Za-z_0-9]{0,14}",
             "LINE_FEED": "(\\r|\\n|\\r\\n)",
-            "TYPES": "(Integer|Real|Character|Boolean)"
+            "TYPES": "(int|boolean)"
         },
         rules: [
             // Reservadas
-            ["var", "return 'var';"],
+            ["var", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'var';"],
+            ["program", "return 'program';"],
+            ["{TYPES}", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'TYPE';"],
+
 
             // Identificadores e números
             ["{INVALID_IDENTIFIER}", "return ['INVALID_ID_LENGTH', yytext, [yylloc.first_line, yylloc.first_column]];"],
-            ["{VALID_IDENTIFIER}", "return 'ID';"],
+            ["{VALID_IDENTIFIER}", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'ID';"],
             ["{DIGIT}{9,}", "return ['OVERFLOW_NUMBER', yytext, [yylloc.first_line, yylloc.first_column]];"],
             ["{DIGIT}{1,8}", "return 'NUMBER';"],
 
+
             // Delimitadores
-            [",", "return 'COLON';"],
-            [";", "return 'SEMICOLON';"],
+            [",", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'COLON';"],
+            [";", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'SEMICOLON';"],
             [" ", "return;"],
             ["\t", "return;"],
             ["{LINE_FEED}+", "return;"],
@@ -42,11 +46,11 @@ const lexemes = {
             ["(\\*|\\+|\\-|\\/|%)", "return ['ARITMETHIC_OP', yytext, [yylloc.first_line, yylloc.first_column]];"],
 
             // Declaração de tipo
-            [":", "return ['TYPE_DECLARATION', null, [yylloc.first_line, yylloc.first_column]];"],
+            [":", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'TYPE_DECLARATION';"],
 
             // Final de arquivo
             ["\\.", "return ['EOP', null, [yylloc.first_line, yylloc.first_column]];"],
-            ["$", "return 'EOF';"],
+            ["$", "yytext= ['EOF', yylloc.first_line, yylloc.first_column];return 'EOF';"],
 
             // Símbolos fora do alfabeto
             ["[^*]", "return ['UNEXPECTED_TOKEN', yytext, [yylloc.first_line, yylloc.first_column]]"],
@@ -56,8 +60,10 @@ const lexemes = {
         ]
     },
     bnf: {
-        "VAR": ['var IDENTIFIER'],
-        "IDENTIFIER": ['ID SEMICOLON IDENTIFIER', "ID COLON IDENTIFIER", "EOF"],
+        "PROGRAM": [["VAR_DECLARATION", 'return $$']],
+        "VAR_DECLARATION": [['TYPE ID VAR_DECLARATION_LIST VAR_DECLARATION', "$$ = [$1,$2, ...$3, ...$4]"], ["EOF", "$$ = [$1]"]],
+        "VAR_DECLARATION_LIST": [["COLON ID VAR_DECLARATION_LIST", "$$ = [$1, $2, ...$3]"], ["SEMICOLON", "$$ = [$1]"]],
+
     }
 }
 
