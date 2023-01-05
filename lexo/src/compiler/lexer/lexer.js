@@ -10,6 +10,9 @@ const lexemes = {
         "TYPES": "(Integer|Real|Character|Boolean)"
     },
     rules: [
+        // Palavras reservadas
+        ["program", "return ['PROGRAM', yytext, [yylloc.first_line, yylloc.first_column]];"],
+
         // Identificadores e números
         ["{INVALID_IDENTIFIER}", "return ['INVALID_ID_LENGTH', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["{VALID_IDENTIFIER}", "return ['ID', yytext, [yylloc.first_line, yylloc.first_column]];"],
