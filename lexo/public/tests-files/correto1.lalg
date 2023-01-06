@@ -7,7 +7,7 @@ int a, b, c;
 boolean d, e, f;
 begin
 	a:=1;
-	if (a<1)
+	if (a<1) then
 		a:=12
 end;
 
@@ -21,7 +21,7 @@ begin
 	f:=true;
 	read(a);
 	write(b);
-	if (d)
+	if (d) then
 	begin
 		a:=20;
 		b:=10*c;

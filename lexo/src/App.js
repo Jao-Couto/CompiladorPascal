@@ -21,42 +21,44 @@ function App() {
         }
     }
 
-    // 'TYPE ID <VAR_DECLARATION_LIST> SEMICOLON <EOF>',
-    // '<VAR_DECLARATION_LIST>': 'COLON ID <BLOCK>| v',
-
     useEffect(() => {
         const parser = generateParser({
             headRule: '<PROGRAM>',
             '<PROGRAM>': 'PROGRAM ID SEMICOLON <BLOCK> DOT <EOF>',
             '<BLOCK>': '<COMP_COMAND> | <PART_VAR_DECLARATION> <PART_SUBROUTINE_DECLARATION> <COMP_COMAND>',
             '<PART_VAR_DECLARATION>': '<VAR_DECLARATION> SEMICOLON <REMINDER_PART_VAR_DECLARATION> | v',
-            '<REMINDER_PART_VAR_DECLARATION>': '<VAR_DECLARATION> <REMINDER_PART_VAR_DECLARATION> SEMICOLON | v',
+            '<REMINDER_PART_VAR_DECLARATION>': '<VAR_DECLARATION> SEMICOLON <REMINDER_PART_VAR_DECLARATION> | v',
             '<VAR_DECLARATION>': 'TYPE ID <ID_LIST>',
             '<ID_LIST>': 'COLON ID <ID_LIST> | v',
             '<PART_SUBROUTINE_DECLARATION>': '<PROCEDURE_DECLARATION> SEMICOLON <PART_SUBROUTINE_DECLARATION> | v',
             '<PROCEDURE_DECLARATION>': 'PROCEDURE ID <FORMAL_PARAMS> SEMICOLON <BLOCK>',
             '<FORMAL_PARAMS>': 'LPAREN <FORMAL_PARAMS_SECTION> RPAREN | v',
-            '<FORMAL_PARAMS_SECTION>': 'VAR ID <ID_LIST> TYPE_DECLARATION ID <MORE_FORMAL_PARAMS_SECTION> | ID <ID_LIST> TYPE_DECLARATION ID <MORE_FORMAL_PARAMS_SECTION>',
+            '<FORMAL_PARAMS_SECTION>': 'VAR ID <ID_LIST> TYPE_DECLARATION TYPE <MORE_FORMAL_PARAMS_SECTION> | ID <ID_LIST> TYPE_DECLARATION TYPE <MORE_FORMAL_PARAMS_SECTION>',
             '<MORE_FORMAL_PARAMS_SECTION>': 'SEMICOLON <FORMAL_PARAMS_SECTION> <MORE_FORMAL_PARAMS_SECTION> | v',
             '<COMP_COMAND>': 'BEGIN <COMAND> <COMAND_LIST> END',
-            '<COMAND>': '<ATTR>', // | <chamada de procedimento> | <comando composto> | <comando condicional 1> | <comando repetitivo 1>
+            '<COMAND>': 'ID <ATTR_OR_PROCEDURE> | <COMP_COMAND> | <CODITIONAL_COMAND_1> | <LOOP_COMAND_1>',
             '<COMAND_LIST>': 'SEMICOLON <COMAND> <COMAND_LIST> | v',
-            '<ATTR>': '<VAR> ASSIGN <EXPRESSION>',
-            '<VAR>': 'ID',
+            '<ATTR_OR_PROCEDURE>': 'ASSIGN <EXPRESSION> | <PROCEDURE_CALL>',
             '<EXPRESSION>': '<SIMPLE_EXPRESSION> <REMAINDER_EXPRESSION>',
             '<REMAINDER_EXPRESSION>': 'RELATIONAL_OP <SIMPLE_EXPRESSION> | v',
             '<SIMPLE_EXPRESSION>': 'ARITMETHIC_OP_SIMPLE <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | <TERM> <REMAINDER_SIMPLE_EXPRESSION_2>',
             '<REMAINDER_SIMPLE_EXPRESSION_2>': 'ARITMETHIC_OP_SIMPLE <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | OR <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | v',
             '<TERM>': '<FACTOR> <REMINDER_TERM>',
             '<REMINDER_TERM>': 'ARITMETHIC_OP_FACTOR <FACTOR> <REMINDER_TERM> | v',
-            '<FACTOR>': '<VAR> | NUMBER | LPAREN <EXPRESSION> RPAREN | NOT <FACTOR>',
+            '<FACTOR>': 'ID | NUMBER | LPAREN <EXPRESSION> RPAREN | NOT <FACTOR>',
+            '<PROCEDURE_CALL>': 'LPAREN <EXPRESSION> <EXPRESSION_LIST> RPAREN | v',
+            '<EXPRESSION_LIST>': 'COLON <EXPRESSION> | v',
+            '<CODITIONAL_COMAND_1>': 'IF <EXPRESSION> THEN <OPT_BLOCK> <OPTIONAL_ELSE>',
+            '<OPTIONAL_ELSE>': 'ELSE <OPT_BLOCK> | v',
+            '<LOOP_COMAND_1>': 'WHILE <EXPRESSION> DO <OPT_BLOCK>',
+            '<OPT_BLOCK>': '<COMP_COMAND>', // | <COMAND> // Nao esta funcionando por causa da recursao em <COMAND>
             '<EOF>': 'EOF'
         })
         let result = ''
         lexerToParser.map(item => {
             let res = parser.parseToken(item[0])
             console.log(res);
-            result += res.has_errors ? JSON.stringify(res.errors) + "\n" : JSON.stringify(item) + " passou!" + "\n"
+            result += res.has_errors ? JSON.stringify(res.errors) + ' em ' + JSON.stringify(item) + "\n" : JSON.stringify(item) + " passou!" + "\n"
         })
         setLexerResult(result)
 

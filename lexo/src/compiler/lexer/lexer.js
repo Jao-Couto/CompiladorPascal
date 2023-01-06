@@ -17,6 +17,11 @@ const lexemes = {
         ["begin", "return ['BEGIN', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["end", "return ['END', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["procedure", "return ['PROCEDURE', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["if", "return ['IF', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["then", "return ['THEN', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["else", "return ['ELSE', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["while", "return ['WHILE', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["do", "return ['DO', yytext, [yylloc.first_line, yylloc.first_column]];"],
 
         // Operadores
         [":=", "return ['ASSIGN', yytext, [yylloc.first_line, yylloc.first_column]];"],

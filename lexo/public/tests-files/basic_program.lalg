@@ -2,11 +2,12 @@ program basic_program;
 
 int a,b,c;
 
-procedure teste(var aa,bb:Integer; cc:Boolean);
+procedure teste(var aa,bb:int; cc:boolean);
 begin
     aa:= 5;
 end;
 
 begin
-    id:= 10
+    teste(a,b);
+    id:= 10;
 end.
