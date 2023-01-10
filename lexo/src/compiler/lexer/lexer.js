@@ -27,7 +27,7 @@ const lexemes = {
         [":=", "return ['ASSIGN', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["(<>|<=|<|>=|>|=)", "return ['RELATIONAL_OP', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["(\\*|div|and)", "return ['ARITMETHIC_OP_FACTOR', yytext, [yylloc.first_line, yylloc.first_column]];"],
-        ["(\\+,\\-)", "return ['ARITMETHIC_OP_SIMPLE', yytext, [yylloc.first_line, yylloc.first_column]];"],
+        ["(\\+|\\-)", "return ['ARITMETHIC_OP_SIMPLE', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["or", "return ['OR', yytext, [yylloc.first_line, yylloc.first_column]];"],
         ["not", "return ['NOT', yytext, [yylloc.first_line, yylloc.first_column]];"],
 

@@ -7,8 +7,9 @@ int a, b, c;
 boolean d, e, f;
 begin
 	a:=1;
-	if (a<1) then
-		a:=12
+	if (a<1) then begin
+		a:=12;
+	end;
 end;
 
 begin
@@ -25,12 +26,13 @@ begin
 	begin
 		a:=20;
 		b:=10*c;
-		c:=a div b
+		c:=a div b;
 	end;
-	while (a>1)
+	while (a>1) do
 	begin
-		if (b>10)
+		if (b>10) then begin
 			b:=2;
-		a:=a-1
-	end
+		end;
+		a:=a-1;
+	end;
 end.

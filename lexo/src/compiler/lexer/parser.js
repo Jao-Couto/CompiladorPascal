@@ -1,103 +1,36 @@
-const Lexer = require("jison-lex")
-const Jison = require('jison')
+import { generateParser } from '@ellyzeul_/ll1-parser'
 
-const getErrorCondition = (conditionName, exitTokens) => {
-    const allTokens = [
-        'VAR',
-        'PROGRAM',
-        'TYPE',
-        'INVALID_ID_LENGTH',
-        'ID',
-        'OVERFLOW_NUMBER',
-        'NUMBER',
-        'COLON',
-        'SEMICOLON',
-        'UNEXPECTED_EOF',
-        'LPAREN',
-        'RPAREN',
-        'ASSIGN',
-        'RELATIONAL_OP',
-        'ARITMETHIC_OP',
-        'TYPE_DECLARATION',
-        'EOP',
-        'EOF',
-        'UNEXPECTED_TOKEN'
-    ]
-
-    const errorMatches = allTokens
-        .filter(token => exitTokens.findIndex(exit => exit === token) === -1)
-        .map(token => [`${token} ${conditionName}_UNTRACK`, '$$ = ["Error", $1]'])
-
-    return [...exitTokens.map(exit => [`${exit}`, '$$']), ...errorMatches]
-}
-
-const lexemes = {
-    lex: {
-        macros: {
-            "DIGIT": "[0-9]",
-            "INVALID_IDENTIFIER": "[A-Za-z_][A-Za-z_0-9]{15,}",
-            "VALID_IDENTIFIER": "[A-Za-z_][A-Za-z_0-9]{0,14}",
-            "LINE_FEED": "(\\r|\\n|\\r\\n)",
-            "TYPES": "(int|boolean)"
-        },
-        rules: [
-            // Reservadas
-            ["var", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'VAR';"],
-            ["program", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'PROGRAM';"],
-            ["{TYPES}", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'TYPE';"],
-
-
-            // Identificadores e números
-            ["{INVALID_IDENTIFIER}", "return ['INVALID_ID_LENGTH', yytext, [yylloc.first_line, yylloc.first_column]];"],
-            ["{VALID_IDENTIFIER}", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'ID';"],
-            ["{DIGIT}{9,}", "return ['OVERFLOW_NUMBER', yytext, [yylloc.first_line, yylloc.first_column]];"],
-            ["{DIGIT}{1,8}", "return 'NUMBER';"],
-
-
-            // Delimitadores
-            [",", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'COLON';"],
-            [";", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'SEMICOLON';"],
-            [" ", "return;"],
-            ["\t", "return;"],
-            ["{LINE_FEED}+", "return;"],
-
-            // Comentários
-            ["\/\/.*{LINE_FEED}+", "return;"],
-            ["\\\{([^*]*?)\\\}", "return;"],
-            ["\\\{(\\*(?!\/)|[^*])*", "return ['UNEXPECTED_EOF', null, [yylloc.first_line, yylloc.first_column]];"],
-
-            // Parênteses
-            ["\\(", "return 'LPAREN';"],
-            ["\\)", "return 'RPAREN';"],
-
-            // Operadores
-            [":=", "return 'ASSIGN';"],
-            ["(<>|<=|<|>=|>|=)", "return 'RELATIONAL_OP';"],
-            ["(\\*|\\+|\\-|\\/|%)", "return ['ARITMETHIC_OP', yytext, [yylloc.first_line, yylloc.first_column]];"],
-
-            // Declaração de tipo
-            [":", "yytext= [yytext, yylloc.first_line, yylloc.first_column]; return 'TYPE_DECLARATION';"],
-
-            // Final de arquivo
-            ["\\.", "return ['EOP', null, [yylloc.first_line, yylloc.first_column]];"],
-            ["$", "yytext= ['EOF', yylloc.first_line, yylloc.first_column];return 'EOF';"],
-
-            // Símbolos fora do alfabeto
-            ["[^*]", "return ['UNEXPECTED_TOKEN', yytext, [yylloc.first_line, yylloc.first_column]]"],
-        ]
-    },
-    bnf: {
-        "PROGRAM": [["PROGRAM ID", 'return $$'], ["VAR_DECLARATION", 'return $$']],
-        "VAR_DECLARATION": [['VAR ID VAR_DECLARATION_LIST VAR_DECLARATION', "$$ = [$1,$2, ...$3, ...$4]"],
-        ["EOF", "$$ = [$1]"],
-        ["VAR_DECLARATION_ERROR", "$$ = [['ERROR', ...$1]]"]],
-        "VAR_DECLARATION_LIST": [["COLON ID VAR_DECLARATION_LIST", "$$ = [$1, $2, ...$3]"], ["SEMICOLON", "$$ = [$1]"]],
-        "VAR_DECLARATION_ERROR": getErrorCondition("VAR_DECLARATION_ERROR", ["SEMICOLON"]),
-        "VAR_DECLARATION_ERROR_UNTRACK": getErrorCondition("VAR_DECLARATION_ERROR", ["SEMICOLON"])
-    }
-}
-
-const parser = new Jison.Parser(lexemes);
-console.log(getErrorCondition("VAR_DECLARATION_ERROR", ["SEMICOLON"]))
+const parser = generateParser({
+    headRule: '<PROGRAM>',
+    '<PROGRAM>': 'PROGRAM ID SEMICOLON <BLOCK> DOT <EOF>',
+    '<BLOCK>': '<COMP_COMAND> | <PART_VAR_DECLARATION> <PART_SUBROUTINE_DECLARATION> <COMP_COMAND>',
+    '<PART_VAR_DECLARATION>': '<VAR_DECLARATION> SEMICOLON <REMINDER_PART_VAR_DECLARATION> | v',
+    '<REMINDER_PART_VAR_DECLARATION>': '<VAR_DECLARATION> SEMICOLON <REMINDER_PART_VAR_DECLARATION> | v',
+    '<VAR_DECLARATION>': 'TYPE ID <ID_LIST>',
+    '<ID_LIST>': 'COLON ID <ID_LIST> | v',
+    '<PART_SUBROUTINE_DECLARATION>': '<PROCEDURE_DECLARATION> SEMICOLON <PART_SUBROUTINE_DECLARATION> | v',
+    '<PROCEDURE_DECLARATION>': 'PROCEDURE ID <FORMAL_PARAMS> SEMICOLON <BLOCK>',
+    '<FORMAL_PARAMS>': 'LPAREN <FORMAL_PARAMS_SECTION> RPAREN | v',
+    '<FORMAL_PARAMS_SECTION>': 'VAR ID <ID_LIST> TYPE_DECLARATION TYPE <MORE_FORMAL_PARAMS_SECTION> | ID <ID_LIST> TYPE_DECLARATION TYPE <MORE_FORMAL_PARAMS_SECTION>',
+    '<MORE_FORMAL_PARAMS_SECTION>': 'SEMICOLON <FORMAL_PARAMS_SECTION> <MORE_FORMAL_PARAMS_SECTION> | v',
+    '<COMP_COMAND>': 'BEGIN <COMAND> <COMAND_LIST> END',
+    '<COMAND>': 'ID <ATTR_OR_PROCEDURE> | <COMP_COMAND> | <CODITIONAL_COMAND_1> | <LOOP_COMAND_1>',
+    '<COMAND_LIST>': 'SEMICOLON <COMAND> <COMAND_LIST> | v',
+    '<ATTR_OR_PROCEDURE>': 'ASSIGN <EXPRESSION> | <PROCEDURE_CALL>',
+    '<EXPRESSION>': '<SIMPLE_EXPRESSION> <REMAINDER_EXPRESSION>',
+    '<REMAINDER_EXPRESSION>': 'RELATIONAL_OP <SIMPLE_EXPRESSION> | v',
+    '<SIMPLE_EXPRESSION>': 'ARITMETHIC_OP_SIMPLE <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | <TERM> <REMAINDER_SIMPLE_EXPRESSION_2>',
+    '<REMAINDER_SIMPLE_EXPRESSION_2>': 'ARITMETHIC_OP_SIMPLE <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | OR <TERM> <REMAINDER_SIMPLE_EXPRESSION_2> | v',
+    '<TERM>': '<FACTOR> <REMINDER_TERM>',
+    '<REMINDER_TERM>': 'ARITMETHIC_OP_FACTOR <FACTOR> <REMINDER_TERM> | v',
+    '<FACTOR>': 'ID | NUMBER | LPAREN <EXPRESSION> RPAREN | NOT <FACTOR>',
+    '<PROCEDURE_CALL>': 'LPAREN <EXPRESSION> <EXPRESSION_LIST> RPAREN | v',
+    '<EXPRESSION_LIST>': 'COLON <EXPRESSION> | v',
+    '<CODITIONAL_COMAND_1>': 'IF <EXPRESSION> THEN <OPT_BLOCK> <OPTIONAL_ELSE>',
+    '<OPTIONAL_ELSE>': 'ELSE <OPT_BLOCK> | v',
+    '<LOOP_COMAND_1>': 'WHILE <EXPRESSION> DO <OPT_BLOCK>',
+    '<OPT_BLOCK>': '<COMP_COMAND>', // | <COMAND> // Nao esta funcionando por causa da recursao em <COMAND>
+    '<EOF>': 'EOF'
+})
 
 export default parser
