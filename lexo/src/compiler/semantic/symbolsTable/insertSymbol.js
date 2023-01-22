@@ -3,20 +3,20 @@ import getSymbol from "./getSymbol"
 import getSymbolsTable from "./getSymbolsTable"
 
 const insertSymbol = (cadeia, token, categoria, tipo = null, valor = null) => {
-  const symbolsTable = getSymbolsTable()
-  const key = getKey(cadeia, categoria)
-  if (!getSymbol(key)) {
-    symbolsTable[key] = {
-      cadeia,
-      token,
-      categoria,
-      tipo,
-      valor,
-      atualizada: false
+    const symbolsTable = getSymbolsTable()
+    const key = getKey(cadeia, categoria)
+    if (!getSymbol(key)) {
+        symbolsTable[key] = {
+            cadeia,
+            token,
+            categoria,
+            tipo,
+            valor,
+            utilizada: false
+        }
+        return true
     }
-    return true
-  }
-  return false
+    return false
 }
 
 export default insertSymbol
