@@ -6,20 +6,11 @@ import semanticAnalysis from "./index"
 const treatIf = (parseArray, _) => {
     const logicalExpr = []
 
-    const strToBool = (boolStr) => {
-        if (boolStr === "true")
-            return true
-        if (boolStr === "false")
-            return false
-        return undefined
-    }
-
     let i = 2
     for (; parseArray[i][0] !== "RPAREN"; i++) {
         logicalExpr.push(parseArray[i])
     }
 
-    console.log("logic", logicalExpr)
     parseArray.splice(0, i + 2)
     let stateArray = []
     let blockMode = { value: 0 }
@@ -36,7 +27,6 @@ const treatIf = (parseArray, _) => {
                 logicalExpr[i],
                 logicalExpr[i + 1][1],
                 logicalExpr[i + 2]).resultado
-            console.log("bool", boolValue);
             if (boolValue) parseArray.map(parsingObj => semanticAnalysis(parsingObj, stateArray, blockMode))
         }
 
